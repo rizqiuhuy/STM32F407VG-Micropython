@@ -102,4 +102,11 @@ It should work cleanly. The USB starts automatically now, without the PA9 glitch
 
 The flash volume that stores boot.py, main.py and you own project files is about 92K (112K less overheads). It could be a limitation if your project grows. If you are willing to be recompiling your own firmware.dfu file, which I just suggested you shouldn't need to do, then you can save some space. You can "freeze" some of your library files into the firmware image, which does have plenty of spare room. But search elsewhere on just how to do that.
 
-Otherwise, I also tried with SPI connections to add an SD card and an external 2MB flash chip, using the drivers micropython offers here:  .../micropython/drivers. Both attempts failed, and after googling around, I suspect this area (adding external FAT volumes) is broken in micropython and has been for a while. So make do with the internal 92K filespace you have.
+On new firmware from micropython repo ports, I tried with SPI connections to add an SD Card using the drivers micropython offers here:  .../micropython/drivers. Copy sdcard.py on PYBFLASH drive and remount with harware reset. As a result, now you can mount sdcard with external sdcard adapter. Here the example code (i use SPI1 with PA6 as MISO, PA7 as MOSI, PA5 as sck and PA3 as CS):
+
+```
+import machine, sdcard, os
+sd = sdcard.SDCard(machine.SPI(1), machine.Pin("PA3"))
+os.mount(sd, '/sd2')
+os.listdir('/sd2')
+```
